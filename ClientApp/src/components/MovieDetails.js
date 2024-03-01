@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams} from 'react-router-dom';
 
 
 function MovieDetails() {
   const { imdbId} = useParams(); // Access movie ID from route parameters
   const [movieDetails, setMovieDetails] = useState(null);
-  const navigate = useNavigate(); // For navigation
+  
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchDetails = async () => {
+        setIsLoading(true);
       try {
-        const response = await fetch(`https://localhost:44440/movie/${imdbId}`); // Adjust URL based on your API endpoint configuration
+        const response = await fetch(`https://localhost:44440/movie/details/${imdbId}`); // Adjust URL based on your API endpoint configuration
         if (!response.ok) {
           throw new Error('Failed to fetch movie details');
         }
@@ -19,28 +21,32 @@ function MovieDetails() {
         setMovieDetails(details);
       } catch (error) {
         console.error('Error fetching movie details:', error);
-        navigate('/');// Redirect to home if details fetch fails
+        // Redirect to home if details fetch fails
       }
+      finally {
+        setIsLoading(false);
+    }
     };
 
     fetchDetails();
-  }, [imdbId, navigate]); // Re-fetch details when ID changes
+  }, [imdbId]); // Re-fetch details when ID changes
 
   return (
     <div>
-      {movieDetails ? (
-        <>
-          <h2>{movieDetails.title}</h2>
-          {/* <img src={movieDetails.poster} alt={movieDetails.title} /> */}
-          <p>Year: {movieDetails.year}</p>
-          <p>Director: {movieDetails.director}</p>
-          <p>Plot: {movieDetails.plot}</p>
-          {/* Add other details and formatting as needed */}
-        </>
-      ) : (
-        <p>Movie details not found.</p>
-      )}
-    </div>
+    {isLoading && <p>Loading...</p>}
+    {movieDetails && (
+        <div>
+            <h1>{movieDetails.title}</h1>
+            <p>Year: {movieDetails.year}</p>
+            <img src={movieDetails.poster} alt={movieDetails.title} />
+            <p>ImdbScore: {movieDetails.imdbRating}</p>
+            <p>Plot: {movieDetails.plot}</p>
+            
+            {/* Render other movie details */}
+        </div>
+    )}
+    {!isLoading && !movieDetails && <p>No movie details found</p>}
+</div>
   );
 }
 

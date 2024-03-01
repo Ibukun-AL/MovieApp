@@ -3,6 +3,9 @@ import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
 import SearchMovie from "./components/SearchMovie";
 import MovieDetails from "./components/MovieDetails";
+import SearchHistory from "./components/SearchHistory";
+
+
 
 const AppRoutes = [
   {
@@ -24,6 +27,10 @@ const AppRoutes = [
   {
     path: '/movie-details/:imdbId',
     element: <MovieDetails />
+  },
+  {
+    path: '/search-history',
+    element: <SearchHistory /> // Pass recent searches
   },
 ];
 

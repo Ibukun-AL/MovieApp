@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,6 +13,8 @@ builder.Services.AddHttpClient<OmdbApiService>(client =>
     // You can also configure other HttpClient properties here
 });
 
+
+    
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

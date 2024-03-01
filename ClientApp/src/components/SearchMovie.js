@@ -9,7 +9,7 @@ function SearchMovie() {
     const fetchMovie = async (title) => {
         setIsLoading(true); 
         try {
-            const response = await fetch(`https://localhost:44440/movie/${title}`);
+            const response = await fetch(`https://localhost:44440/movie/search/${title}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch movie');
             }
@@ -32,6 +32,10 @@ function SearchMovie() {
 
     const handleSearch = () => {
         fetchMovie(searchQuery);
+
+        const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+        recentSearches.unshift(searchQuery);
+        localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
     };
 
     return (
@@ -45,16 +49,17 @@ function SearchMovie() {
             />
             <button onClick={handleSearch}>Search</button>
             {isLoading && <p>Loading...</p>} {/* Show loading indicator only when fetching */}
-      {movie ? (
-        <div className="movie-card">
-        <h3>{movie.title}</h3>
-        <h3>{movie.imdbId}</h3>
-        <Link to={`/movie-details/${movie.imdbId}`}>
-          <button>View Details</button>
-        </Link>
-      </div>
-      ) : !isLoading && <p></p>} {/* Show "No movie found" if movie is null and not loading */}
-    </div>
+            {movie && (
+                <div className="movie-card">
+                    <h3>{movie.title}</h3>
+                    <h3>{movie.imdbID}</h3>
+                    <Link to={`/movie-details/${movie.imdbID}`}>
+                        <button>View Details</button>
+                    </Link>
+                </div>
+            )}
+            {!isLoading && !movie && <p></p>} {/* Show "No movie found" if movie is null and not loading */}
+        </div>
     );
 }
 

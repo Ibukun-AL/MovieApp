@@ -17,20 +17,20 @@ public class MovieController : ControllerBase
         _omdbApiService = omdbApiService;
         _logger = logger;
     }
-[HttpGet]
- [HttpGet("{title}")]
+
+ [HttpGet("search/{title}")]
     public async Task<IActionResult> GetMovie(string title)
     {
         var movie = await _omdbApiService.GetMovieAsync(title);
-        _logger.LogInformation("Received movie data: {@Movie}", movie.ImdbID);
+        _logger.LogInformation("Received movie data: {@Movie}", movie.imdbID);
         return Ok(movie);
     }
 
-     [HttpGet("{title}/{imdbId}")]
-    public async Task<IActionResult> GetMovieDetails(string imdbId)
+     [HttpGet("details/{imdbId}")]
+    public async Task<IActionResult> GetMovieDetails(string imdbid)
     {
-        var movieDetails = await _omdbApiService.GetMovieDetailsAsync(imdbId);
-        _logger.LogInformation("Received movie details: {@MovieDetails}", movieDetails.ImdbID);
+        var movieDetails = await _omdbApiService.GetMovieDetailsAsync(imdbid);
+        _logger.LogInformation("Received movie details: {@MovieDetails}", movieDetails.imdbID);
         return Ok(movieDetails);
     }
  }
